@@ -26,7 +26,7 @@ func Connect() {
 
 // Ensure Indexes on keys
 func PopulateIndex() {
-	for _, key := range []string{"nodeId"} {
+	for _, key := range []string{"nodeId", "timestamp"} {
 		index := mgo.Index{
 			Key: []string{key},
 		}

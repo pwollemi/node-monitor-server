@@ -37,6 +37,8 @@ func GetNodeById(w http.ResponseWriter, r *http.Request) {
 	ReturnJson(w, http.StatusOK, "Node data", map[string]interface{}{
 		"blockHeight": nodeInfo.BlockHeight,
 		"nodeId":      nodeInfo.NodeID,
+		"cpu":         nodeInfo.Cpu,
+		"memory":      nodeInfo.Memory,
 	})
 }
 

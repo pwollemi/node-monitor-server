@@ -19,7 +19,7 @@ func FindById(id string) (models.NodeInfo, error) {
 
 func FindLatest() (models.NodeInfo, error) {
 	var nodeInfo models.NodeInfo
-	err := db.C(COLLECTION).Find(bson.M{}).Sort("-timestamp").One(&nodeInfo)
+	err := db.C(COLLECTION).Find(bson.M{}).Sort("-blockHeight").One(&nodeInfo)
 	return nodeInfo, err
 }
 
