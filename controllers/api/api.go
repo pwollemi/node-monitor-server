@@ -37,10 +37,10 @@ var Routes = models.RoutePrefix{
 			true,
 		},
 		{
-			"PostNodeInfo",
+			"CreateNodeMetric",
 			"POST",
 			"/nodes",
-			handlers.PostNodeInfo,
+			handlers.CreateNodeMetric,
 			true,
 		},
 	},

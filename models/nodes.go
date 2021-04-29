@@ -6,7 +6,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-type NodeInfo struct {
+type NodeMetric struct {
 	ID          bson.ObjectId          `bson:"_id" json:"_id"`
 	NodeID      string                 `bson:"nodeId" json:"nodeId"`
 	BlockHeight uint64                 `bson:"blockHeight" json:"blockHeight"`
@@ -18,7 +18,7 @@ type NodeInfo struct {
 	Sec         uint64                 `bson:"second" json:"-"`
 }
 
-type NodeInfoRequest struct {
+type NodeMetricRequest struct {
 	NodeID      string                 `bson:"nodeId" json:"nodeId"`
 	BlockHeight uint64                 `bson:"blockHeight" json:"blockHeight"`
 	TimeStamp   time.Time              `bson:"timestamp" json:"timestamp"`

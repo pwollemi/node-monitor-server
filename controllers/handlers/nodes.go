@@ -16,14 +16,14 @@ import (
 
 // GET latest block height
 func GetLatest(w http.ResponseWriter, r *http.Request) {
-	nodeInfo, err := dao.FindLatest()
+	nodeMetric, err := dao.FindLatest()
 	if err != nil {
 		ReturnJson(w, http.StatusInternalServerError, "Database error", false)
 		return
 	}
 	ReturnJson(w, http.StatusOK, "Latest data", map[string]interface{}{
-		"blockHeight": nodeInfo.BlockHeight,
-		"nodeId":      nodeInfo.NodeID,
+		"blockHeight": nodeMetric.BlockHeight,
+		"nodeId":      nodeMetric.NodeID,
 	})
 }
 
@@ -31,18 +31,19 @@ func GetLatest(w http.ResponseWriter, r *http.Request) {
 func GetNodeById(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	query := r.URL.Query()
-	from_ts := query.Get("from_ts")
-	to_ts := query.Get("to_ts")
+
 	from := time.Now().Add(time.Hour * time.Duration(-1))
 	to := time.Now()
+	from_ts := query.Get("from_ts")
+	to_ts := query.Get("to_ts")
 	if len(from_ts) > 0 {
 		from = decodeTimestamp(query.Get("from_ts"))
 	}
 	if len(to_ts) > 0 {
 		to = decodeTimestamp(query.Get("to_ts"))
 	}
-	h, m, s := getIntervals(from, to)
 
+	h, m, s := getIntervals(from, to)
 	nodeInfos, err := dao.FindWithOption(params["nodeId"], from, to, h, m, s)
 	if err != nil {
 		ReturnJson(w, http.StatusNotFound, "Invalid node ID", false)
@@ -63,22 +64,22 @@ func GetAllNodes(w http.ResponseWriter, r *http.Request) {
 	}
 	res := map[string]interface{}{}
 	for _, id := range nodeIds {
-		nodeInfo, _ := dao.FindById(id)
-		res[id] = nodeInfo
+		nodeMetric, _ := dao.FindById(id)
+		res[id] = nodeMetric
 	}
 	ReturnJson(w, http.StatusOK, "Node data", res)
 }
 
-// POST node info
-func PostNodeInfo(w http.ResponseWriter, r *http.Request) {
+// POST node metric
+func CreateNodeMetric(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
-	var infoData models.NodeInfoRequest
+	var infoData models.NodeMetricRequest
 	if err := json.NewDecoder(r.Body).Decode(&infoData); err != nil {
 		ReturnJson(w, http.StatusBadRequest, "Invalid request payload", false)
 		return
 	}
 
-	info := models.NodeInfo{
+	metric := models.NodeMetric{
 		ID:          bson.NewObjectId(),
 		NodeID:      infoData.NodeID,
 		BlockHeight: infoData.BlockHeight,
@@ -89,9 +90,9 @@ func PostNodeInfo(w http.ResponseWriter, r *http.Request) {
 		Min:         uint64(infoData.TimeStamp.Minute()),
 		Sec:         uint64(infoData.TimeStamp.Second()) / 5 * 5,
 	}
-	if err := dao.Insert(info); err != nil {
+	if err := dao.Insert(metric); err != nil {
 		ReturnJson(w, http.StatusInternalServerError, err.Error(), false)
 		return
 	}
-	ReturnJson(w, http.StatusCreated, "Node data added", info)
+	ReturnJson(w, http.StatusCreated, "Node data added", metric)
 }

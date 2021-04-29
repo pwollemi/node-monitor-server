@@ -1,0 +1,291 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "Node Monitoring Server",
+      "contact": {
+        "email": "daniel@fantom.foundation"
+      }
+    },
+    "host": "127.0.0.1",
+    "basePath": "/api",
+    "tags": [
+      {
+        "name": "nodes",
+        "description": "API for node metrics"
+      }
+    ],
+    "schemes": [
+      "https",
+      "http"
+    ],
+    "paths": {
+      "/nodes": {
+        "post": {
+          "tags": [
+            "nodes"
+          ],
+          "summary": "Add a new metric",
+          "operationId": "createNodeMetric",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nodeId": {
+                    "type": "string"
+                  },
+                  "blockHeight": {
+                    "type": "integer"
+                  },
+                  "timestamp": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "cpu": {
+                    "$ref": "#/definitions/CPUMetric"
+                  },
+                  "memory": {
+                    "$ref": "#/definitions/MemoryMetric"
+                  }
+                },
+                "required": [
+                  "nodeId",
+                  "blockHieght",
+                  "timestamp"
+                ]
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "integer"
+                  },
+                  "success": {
+                    "type": "boolean"
+                  },
+                  "msg": {
+                    "type": "string"
+                  },
+                  "data": {
+                    "$ref": "#/definitions/NodeMetric"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "get": {
+          "tags": [
+            "nodes"
+          ],
+          "summary": "Get metrics of all nodes",
+          "operationId": "getNodeMetrics",
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "integer"
+                  },
+                  "success": {
+                    "type": "boolean"
+                  },
+                  "msg": {
+                    "type": "string"
+                  },
+                  "data": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/definitions/NodeMetric"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/nodes/latest": {
+        "get": {
+          "tags": [
+            "nodes"
+          ],
+          "summary": "Get the latest block height",
+          "operationId": "getLatestBlockHeight",
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "integer"
+                  },
+                  "success": {
+                    "type": "boolean"
+                  },
+                  "msg": {
+                    "type": "string"
+                  },
+                  "data": {
+                    "$ref": "#/definitions/NodeMetric"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/nodes/{nodeId}": {
+        "get": {
+          "tags": [
+            "nodes"
+          ],
+          "summary": "Get metrics of a specific nodes",
+          "operationId": "getSingleNodeMetric",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "nodeId",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "from_ts",
+              "in": "query",
+              "type": "integer"
+            },
+            {
+              "name": "to_ts",
+              "in": "query",
+              "type": "integer"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "integer"
+                  },
+                  "success": {
+                    "type": "boolean"
+                  },
+                  "msg": {
+                    "type": "string"
+                  },
+                  "data": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/definitions/NodeMetric"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "definitions": {
+      "CPUMetric": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer"
+          },
+          "user": {
+            "type": "integer"
+          },
+          "system": {
+            "type": "integer"
+          },
+          "nice": {
+            "type": "integer"
+          },
+          "idle": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "total",
+          "user",
+          "system",
+          "nice",
+          "idle"
+        ]
+      },
+      "MemoryMetric": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer"
+          },
+          "used": {
+            "type": "integer"
+          },
+          "cached": {
+            "type": "integer"
+          },
+          "free": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "total",
+          "used",
+          "free",
+          "cached"
+        ]
+      },
+      "NodeMetric": {
+        "type": "object",
+        "properties": {
+          "nodeId": {
+            "type": "string"
+          },
+          "blockHeight": {
+            "type": "integer"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-tim"
+          },
+          "cpu": {
+            "$ref": "#/definitions/CPUMetric"
+          },
+          "memory": {
+            "$ref": "#/definitions/MemoryMetric"
+          }
+        }
+      }
+    }
+  }

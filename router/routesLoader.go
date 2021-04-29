@@ -3,10 +3,14 @@ package router
 import (
 	"log"
 	"net/http"
+	"os"
+	"regexp"
 
 	"github.com/flashguru-git/node-monitor-server/controllers/api"
+	_ "github.com/flashguru-git/node-monitor-server/docs"
 	"github.com/flashguru-git/node-monitor-server/models"
 	"github.com/gorilla/mux"
+	"github.com/swaggo/http-swagger"
 )
 
 func loggingMiddleware(next http.Handler) http.Handler {
@@ -17,18 +21,26 @@ func loggingMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-// func commonMiddleware(next http.Handler) http.Handler {
-// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-// 		w.Header().Set("Content-Type", "application/json")
-// 		next.ServeHTTP(w, r)
-// 	})
-// }
+func commonMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if match, _ := regexp.MatchString("/swagger/*", r.URL.Path); match {
+			next.ServeHTTP(w, r)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		next.ServeHTTP(w, r)
+	})
+}
 
 func NewRouter() *mux.Router {
 	routes := mux.NewRouter()
 
 	routes.Use(loggingMiddleware)
-	// routes.Use(commonMiddleware)
+	routes.Use(commonMiddleware)
+
+	routes.PathPrefix("/swagger/").Handler(httpSwagger.Handler(
+		httpSwagger.URL("http://" + os.Getenv("HOST") + ":" + os.Getenv("PORT") + "/swagger/doc.json"), //The url pointing to API definition"
+	))
 
 	//append applications routes
 	models.Routes = append(models.Routes, api.Routes)

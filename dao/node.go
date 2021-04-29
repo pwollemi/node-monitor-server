@@ -7,19 +7,19 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func FindAll() ([]models.NodeInfo, error) {
-	var infos []models.NodeInfo
+func FindAll() ([]models.NodeMetric, error) {
+	var infos []models.NodeMetric
 	err := db.C(COLLECTION).Find(bson.M{}).All(&infos)
 	return infos, err
 }
 
-func FindById(id string) (models.NodeInfo, error) {
-	var nodeInfo models.NodeInfo
-	err := db.C(COLLECTION).Find(bson.M{"nodeId": id}).Sort("-timestamp").One(&nodeInfo)
-	return nodeInfo, err
+func FindById(id string) (models.NodeMetric, error) {
+	var nodeMetric models.NodeMetric
+	err := db.C(COLLECTION).Find(bson.M{"nodeId": id}).Sort("-timestamp").One(&nodeMetric)
+	return nodeMetric, err
 }
 
-func FindWithOption(id string, from time.Time, to time.Time, h []uint64, m []uint64, s []uint64) ([]models.NodeInfo, error) {
+func FindWithOption(id string, from time.Time, to time.Time, h []uint64, m []uint64, s []uint64) ([]models.NodeMetric, error) {
 	filter := bson.M{"nodeId": id, "timestamp": bson.M{"$gte": from.Unix(), "$lte": to.Unix()}}
 	if len(h) > 0 {
 		filter["hour"] = bson.M{"$in": h}
@@ -31,7 +31,7 @@ func FindWithOption(id string, from time.Time, to time.Time, h []uint64, m []uin
 		filter["second"] = bson.M{"$in": s}
 	}
 
-	var res []models.NodeInfo
+	var res []models.NodeMetric
 	err := db.C(COLLECTION).Find(filter).Sort("-timestamp").All(&res)
 	return res, err
 }
@@ -42,18 +42,18 @@ func FindAllNodeId() ([]string, error) {
 	return res, err
 }
 
-func FindLatest() (models.NodeInfo, error) {
-	var nodeInfo models.NodeInfo
-	err := db.C(COLLECTION).Find(bson.M{}).Sort("-blockHeight").One(&nodeInfo)
-	return nodeInfo, err
+func FindLatest() (models.NodeMetric, error) {
+	var nodeMetric models.NodeMetric
+	err := db.C(COLLECTION).Find(bson.M{}).Sort("-blockHeight").One(&nodeMetric)
+	return nodeMetric, err
 }
 
-func Insert(nodeInfo models.NodeInfo) error {
-	err := db.C(COLLECTION).Insert(&nodeInfo)
+func Insert(nodeMetric models.NodeMetric) error {
+	err := db.C(COLLECTION).Insert(&nodeMetric)
 	return err
 }
 
-func Delete(nodeInfo models.NodeInfo) error {
-	err := db.C(COLLECTION).Remove(&nodeInfo)
+func Delete(nodeMetric models.NodeMetric) error {
+	err := db.C(COLLECTION).Remove(&nodeMetric)
 	return err
 }
