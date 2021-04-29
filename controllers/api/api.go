@@ -18,15 +18,22 @@ var Routes = models.RoutePrefix{
 		{
 			"GetLatest",
 			"GET",
-			"/latest",
+			"/nodes/latest",
 			handlers.GetLatest,
 			true,
 		},
 		{
 			"GetNode",
 			"GET",
-			"/{nodeId}",
+			"/nodes/{nodeId}",
 			handlers.GetNodeById,
+			true,
+		},
+		{
+			"GetAllNodes",
+			"GET",
+			"/nodes",
+			handlers.GetAllNodes,
 			true,
 		},
 		{
