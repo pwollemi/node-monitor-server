@@ -10,7 +10,7 @@ import (
 	_ "github.com/flashguru-git/node-monitor-server/docs"
 	"github.com/flashguru-git/node-monitor-server/models"
 	"github.com/gorilla/mux"
-	"github.com/swaggo/http-swagger"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 func loggingMiddleware(next http.Handler) http.Handler {
@@ -39,7 +39,7 @@ func NewRouter() *mux.Router {
 	routes.Use(commonMiddleware)
 
 	routes.PathPrefix("/swagger/").Handler(httpSwagger.Handler(
-		httpSwagger.URL("http://" + os.Getenv("HOST") + ":" + os.Getenv("PORT") + "/swagger/doc.json"), //The url pointing to API definition"
+		httpSwagger.URL(os.Getenv("SERVER") + "/swagger/doc.json"), //The url pointing to API definition"
 	))
 
 	//append applications routes

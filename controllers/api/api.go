@@ -6,7 +6,7 @@ import (
 )
 
 var Routes = models.RoutePrefix{
-	"/api",
+	"/",
 	[]models.Route{
 		{
 			"HealthCheck",
