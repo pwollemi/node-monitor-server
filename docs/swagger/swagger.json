@@ -7,7 +7,7 @@
         "email": "daniel@fantom.foundation"
       }
     },
-    "host": "127.0.0.1",
+    "host": "monitor.fantom.network",
     "basePath": "/api",
     "tags": [
       {
