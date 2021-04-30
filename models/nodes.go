@@ -10,7 +10,8 @@ type NodeMetric struct {
 	ID          bson.ObjectId          `bson:"_id" json:"_id"`
 	NodeID      string                 `bson:"nodeId" json:"nodeId"`
 	BlockHeight uint64                 `bson:"blockHeight" json:"blockHeight"`
-	TimeStamp   int64                  `bson:"timestamp" json:"timestamp"`
+	CreatedAt   time.Time              `bson:"createdAt" json:"createdAt"`
+	TimeStamp   int64                  `bson:"timestamp" json:"-"`
 	Cpu         map[string]interface{} `bson:"cpu" json:"cpu"`
 	Memory      map[string]interface{} `bson:"memory" json:"memory"`
 	Hour        uint64                 `bson:"hour" json:"-"`
@@ -21,7 +22,7 @@ type NodeMetric struct {
 type NodeMetricRequest struct {
 	NodeID      string                 `bson:"nodeId" json:"nodeId"`
 	BlockHeight uint64                 `bson:"blockHeight" json:"blockHeight"`
-	TimeStamp   time.Time              `bson:"timestamp" json:"timestamp"`
+	CreatedAt   time.Time              `bson:"createdAt" json:"createdAt"`
 	Cpu         map[string]interface{} `bson:"cpu" json:"cpu"`
 	Memory      map[string]interface{} `bson:"memory" json:"memory"`
 }

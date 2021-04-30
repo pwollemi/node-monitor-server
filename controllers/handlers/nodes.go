@@ -83,12 +83,13 @@ func CreateNodeMetric(w http.ResponseWriter, r *http.Request) {
 		ID:          bson.NewObjectId(),
 		NodeID:      infoData.NodeID,
 		BlockHeight: infoData.BlockHeight,
-		TimeStamp:   infoData.TimeStamp.Unix(),
+		TimeStamp:   infoData.CreatedAt.Unix(),
+		CreatedAt:   infoData.CreatedAt,
 		Cpu:         infoData.Cpu,
 		Memory:      infoData.Memory,
-		Hour:        uint64(infoData.TimeStamp.Hour()),
-		Min:         uint64(infoData.TimeStamp.Minute()),
-		Sec:         uint64(infoData.TimeStamp.Second()) / 5 * 5,
+		Hour:        uint64(infoData.CreatedAt.Hour()),
+		Min:         uint64(infoData.CreatedAt.Minute()),
+		Sec:         uint64(infoData.CreatedAt.Second()) / 5 * 5,
 	}
 	if err := dao.Insert(metric); err != nil {
 		ReturnJson(w, http.StatusInternalServerError, err.Error(), false)

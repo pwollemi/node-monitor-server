@@ -47,7 +47,7 @@
                   "blockHeight": {
                     "type": "integer"
                   },
-                  "timestamp": {
+                  "createdAt": {
                     "type": "string",
                     "format": "date-time"
                   },
@@ -61,7 +61,7 @@
                 "required": [
                   "nodeId",
                   "blockHieght",
-                  "timestamp"
+                  "createdAt"
                 ]
               }
             }
@@ -275,7 +275,7 @@
           "blockHeight": {
             "type": "integer"
           },
-          "timestamp": {
+          "createdAt": {
             "type": "string",
             "format": "date-tim"
           },
